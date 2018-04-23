@@ -1,5 +1,6 @@
 package com.example.stasy.study_tidy
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
@@ -22,55 +23,82 @@ import java.nio.file.Files.size
 import android.content.Context.LAYOUT_INFLATER_SERVICE
 import android.view.LayoutInflater
 import android.widget.BaseAdapter
+import com.prolificinteractive.materialcalendarview.CalendarUtils.getMonth
+import kotlinx.android.synthetic.main.activity_day.*
 import java.util.ArrayList
 
 
-class day : AppCompatActivity() {
+class day : Activity() {
     private var gestureDetectorCompat: GestureDetectorCompat? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_day)
         gestureDetectorCompat = GestureDetectorCompat(this, MyGestureListener())
-        var image_button = findViewById(R.id.imageButton) as ImageButton
+
+        val extras = intent.extras
+        val date = extras.getString("Date")
+
+        textView2.setText(date)
+
+        var _date = date.split(" ")[0]
+        var _month:Int = _getMonth(date.split(" ")[1])
+        var dateToAdd = _date + " " + _month.toString()
 
         val studyListView = findViewById<ListView>(R.id.listView)
-        val extracullicularListView = findViewById(R.id.listView1) as ListView
+        val extracullicularListView = findViewById<ListView>(R.id.listView1)
 
         studyListView.setItemsCanFocus(true)
         extracullicularListView.setItemsCanFocus(true)
-
-        val studyStorage = DateStorage()
-
-        val date = "///"
-
-        val studyAdapter = MyAdapter()
+        val studyAdapter = MyAdapter(applicationContext, DateStorage.educationEvent, dateToAdd)
         studyListView.setAdapter(studyAdapter);
 
-        val extracullicularAdapter = MyAdapter();
-        extracullicularListView.setAdapter(extracullicularAdapter);
-
-        image_button.setOnClickListener(object : View.OnClickListener {
+        imageButton1.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
+                DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "")
+                studyAdapter.notifyDataSetChanged()
+            }
+        })
 
+        val extracullicularAdapter = MyAdapter(applicationContext,DateStorage.funEvent, dateToAdd )
+        extracullicularListView.setAdapter(extracullicularAdapter)
+
+        imageButton.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                DateStorage.addEvent(dateToAdd, DateStorage.funEvent, "")
+                extracullicularAdapter.notifyDataSetChanged()
             }
         })
     }
 
-    inner class MyAdapter : BaseAdapter() {
-        private val mInflater: LayoutInflater
-        internal var myItems = ArrayList<ListItem>()
+    private fun _getMonth(s: String): Int {
+        val monthList : List<String> = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
+                "августа", "сентября", "октября", "ноября", "декабря")
+        var t:Int = 0
+        for(month in monthList)
+        {
+            if(s==month)
+            {
+                return t
+            }
+            t++
+        }
+        return 0
+    }
 
-        init {
-            mInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val listItem = ListItem()
-            listItem.caption = "Caption$0"
-            myItems.add(listItem)
-
-            notifyDataSetChanged()
+    inner class MyAdapter : BaseAdapter {
+        private var context: Context
+        private var direct: String
+        private var dateToAdd: String
+        private var events: ArrayList<String> = ArrayList<String>()
+        constructor(context: Context, direct : String, dateToAdd: String) {
+            this.context = context;
+            this.direct = direct;
+            this.dateToAdd = dateToAdd
         }
 
         override fun getCount(): Int {
-            return myItems.size
+            return events.size
         }
 
         override fun getItem(position: Int): Any {
@@ -81,58 +109,62 @@ class day : AppCompatActivity() {
             return position.toLong()
         }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            var convertView = convertView
-            val holder: ViewHolder
+        override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+            var retView = convertView
+            val holder: ViewHolder = ViewHolder()
+            var deleteButton = convertView!!.findViewById(R.id.imageButton2) as ImageButton
+            events = DateStorage.todayEvent(dateToAdd, direct)
             if (convertView == null) {
-                holder = ViewHolder()
-                convertView = mInflater.inflate(R.layout.item, null)
-                holder.caption = convertView!!
-                        .findViewById(R.id.ItemCaption) as EditText
+                val mInflater: LayoutInflater
+                mInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+                retView = mInflater.inflate(R.layout.item, null)
 
-                convertView.tag = holder
-            } else {
-                holder = convertView.tag as ViewHolder
+                holder.caption = convertView.findViewById(R.id.ItemCaption) as EditText
+                retView.setTag(holder);
+                }
+            else
+            {
+                convertView.setTag(holder);
+                retView = convertView
             }
-            //Fill EditText with the value you have in data source
-            holder.caption!!.setText(myItems.get(position).caption)
-            holder.caption!!.id = position
-
-            //we need to update adapter once we finish with editing
-            holder.caption!!.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
+            holder.caption?.setText(events.get(position));
+            holder.caption?.setOnFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
                 if (!hasFocus) {
                     val position = v.id
                     val Caption = v as EditText
-                    myItems.get(position).caption = Caption.text.toString()
+                    DateStorage.changeEvent(dateToAdd, direct, Caption.text.toString(), position)
+                    notifyDataSetChanged()
                 }
-            }
+            })
 
-            return convertView
+                deleteButton.setOnClickListener(object : View.OnClickListener {
+                    override fun onClick(v: View) {
+                        DateStorage.deleteEvent(dateToAdd, direct, position)
+                        notifyDataSetChanged()
+                    }
+                })
+
+                return retView
         }
-
     }
 
     internal inner class ViewHolder {
         var caption: EditText? = null
     }
+        override fun onTouchEvent(event: MotionEvent): Boolean {
+            this.gestureDetectorCompat!!.onTouchEvent(event)
+            return super.onTouchEvent(event)
+        }
 
-    internal inner class ListItem {
-        var caption: String? = null
-    }
-
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        this.gestureDetectorCompat!!.onTouchEvent(event)
-        return super.onTouchEvent(event)
-    }
-
-    internal inner class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
-        //handle 'swipe right' action only
-        override fun onFling(event1: MotionEvent, event2: MotionEvent,
-                             velocityX: Float, velocityY: Float): Boolean {
-            if (event2.x > event1.x) {
-                finish()
+        internal inner class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
+            //handle 'swipe right' action only
+            override fun onFling(event1: MotionEvent, event2: MotionEvent,
+                                 velocityX: Float, velocityY: Float): Boolean {
+                if (event2.x > event1.x) {
+                    finish()
+                }
+                return true
             }
-            return true
         }
     }
-}
+

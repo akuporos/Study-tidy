@@ -3,19 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-
-    <EditText
+    <TextView
         android:id="@+id/ItemCaption"
         android:layout_width="324dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dip"
-        android:singleLine="true"></EditText>
-
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:background="@null"
-        android:src="@drawable/ic_delete_black_24dp"/>
-
+        android:singleLine="true"></TextView>
 </LinearLayout>

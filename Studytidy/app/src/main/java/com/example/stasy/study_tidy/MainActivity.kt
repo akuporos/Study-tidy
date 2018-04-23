@@ -15,7 +15,7 @@ import android.text.method.Touch.onTouchEvent
 import com.example.stasy.study_tidy.R.layout.activity_calendar
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 
     private var gestureDetectorCompat: GestureDetectorCompat? = null
     override fun onCreate(savedInstanceState: Bundle?) {

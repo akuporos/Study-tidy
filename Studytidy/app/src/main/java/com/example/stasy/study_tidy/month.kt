@@ -1,6 +1,7 @@
 package com.example.stasy.study_tidy
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -13,23 +14,47 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import android.support.annotation.NonNull
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
+import com.prolificinteractive.materialcalendarview.OnRangeSelectedListener
+import kotlinx.android.synthetic.main.activity_month.*
 
 
-
-
-class month : AppCompatActivity() {
+class month : Activity() {
 
     private var gestureDetectorCompat: GestureDetectorCompat? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_month)
-       var mcv = findViewById(R.id.calendarView) as MaterialCalendarView
-        mcv.setPagingEnabled(false)
-        var t = 10
-        mcv.setOnDateChangedListener(OnDateSelectedListener { widget, date, selected -> val dayActivity = Intent(applicationContext, day::class.java)
-            dayActivity.putExtra("Date", t)
-            startActivity(dayActivity); })
+        var mcv = findViewById(R.id.calendarView) as MaterialCalendarView
+        var dayActivity = Intent(applicationContext, day::class.java)
 
+        //TODO: отображать сессионную неделю
+
+        val monthList : List<String> = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
+        "августа", "сентября", "октября", "ноября", "декабря")
+
+        mcv.setSelectionMode(MaterialCalendarView.SELECTION_MODE_RANGE)
+
+        mcv.setOnDateChangedListener(OnDateSelectedListener { widget, date, selected ->
+            mcv.setOnLongClickListener(object : View.OnLongClickListener {
+                override fun onLongClick(v: View): Boolean {
+                    return true
+                }
+            })
+            var dateToSend= date.day.toString() + " " + monthList[date.month]
+            dayActivity.putExtra("Date", dateToSend)
+            startActivity(dayActivity)
+        })
+        mcv.setOnRangeSelectedListener(OnRangeSelectedListener{widget, dates ->
+            button.setOnClickListener (object : View.OnClickListener {
+                override fun onClick(v: View) {
+                    for(day in dates )
+                    {
+                        var dateToAdd = day.date.toString() + " " + day.month.toString()
+                        DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "Session")
+                    }
+                }
+            })
+        })
         gestureDetectorCompat = GestureDetectorCompat(this, MyGestureListener())
     }
 
@@ -48,4 +73,8 @@ class month : AppCompatActivity() {
             return true
         }
     }
+}
+
+private fun MaterialCalendarView.setOnLongClickListener(mcv: MaterialCalendarView) {
+
 }

@@ -4,48 +4,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/four"
     tools:context=".today">
+
 
     <TextView
         android:id="@+id/textView3"
-        android:layout_width="377dp"
-        android:layout_height="41dp"
-        android:layout_marginTop="232dp"
+        android:layout_width="299dp"
+        android:layout_height="46dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginStart="32dp"
         android:fontFamily="casual"
         android:text="Внеучебная деятельность"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/imageButton1"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/listView" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:scaleX="-1"
+        android:src="@drawable/ic_arrow_forward_black_24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="277dp"
-        android:layout_height="40dp"
+        android:layout_width="300dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:fontFamily="casual"
         android:text="Учебная/Рабочая деятельность"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textSize="18sp"
         android:textStyle="bold"
-        tools:layout_editor_absoluteX="52dp"
-        tools:layout_editor_absoluteY="8dp" />
-
-    <ImageButton
-        android:id="@+id/imageButton1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_add" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.219"
+        app:layout_constraintStart_toEndOf="@+id/imageButton"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/listView"
         android:layout_width="386dp"
         android:layout_height="143dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="1dp"
         android:gravity="center_horizontal"
         android:padding="5dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,22 +66,12 @@
 
     <ListView
         android:id="@+id/listView1"
-        android:layout_width="385dp"
-        android:layout_height="187dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="380dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="1dp"
         android:gravity="center_horizontal"
         android:padding="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
-    <ImageButton
-        android:id="@+id/imageButton"
-        app:srcCompat="?android:attr/actionModeCloseDrawable"
-        android:layout_width="44dp"
-        android:layout_height="40dp"
-        android:layout_marginRight="16dp"
-        android:adjustViewBounds="false"
-        android:cropToPadding="false"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

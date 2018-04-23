@@ -1,5 +1,6 @@
 package com.example.stasy.study_tidy
 
+import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -14,7 +15,7 @@ import com.github.ik024.calendar_lib.listeners.YearViewClickListeners
 import java.util.*
 
 
-class calendar : AppCompatActivity(), YearViewClickListeners {
+class calendar : Activity(), YearViewClickListeners {
 
     internal lateinit var mYearView: YearView
     private var gestureDetectorCompat: GestureDetectorCompat? = null
@@ -36,7 +37,7 @@ class calendar : AppCompatActivity(), YearViewClickListeners {
         gestureDetectorCompat = GestureDetectorCompat(this, MyGestureListener())
         //val toolbar = findViewById(R.id.toolbar) as Toolbar
         //setSupportActionBar(toolbar)
-        supportActionBar!!.setTitle("YearViewDemo")
+
         mYearView = findViewById(R.id.calendar_year_view) as YearView
         mYearView.registerYearViewClickListener(this)
         //adding events to the calendar
