@@ -50,7 +50,10 @@ class day : Activity() {
 
         studyListView.setItemsCanFocus(true)
         extracullicularListView.setItemsCanFocus(true)
-        val studyAdapter = MyAdapter(applicationContext, DateStorage.educationEvent, dateToAdd)
+
+        DateStorage.addEvent(dateToAdd, DateStorage.funEvent, "")
+        DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "")
+        val studyAdapter = MyAdapter(applicationContext,  DateStorage.todayEvent(dateToAdd, DateStorage.educationEvent), DateStorage.educationEvent, dateToAdd)
         studyListView.setAdapter(studyAdapter);
 
         imageButton1.setOnClickListener(object : View.OnClickListener {
@@ -60,7 +63,7 @@ class day : Activity() {
             }
         })
 
-        val extracullicularAdapter = MyAdapter(applicationContext,DateStorage.funEvent, dateToAdd )
+        val extracullicularAdapter = MyAdapter(applicationContext, DateStorage.todayEvent(dateToAdd, DateStorage.funEvent), DateStorage.funEvent, dateToAdd )
         extracullicularListView.setAdapter(extracullicularAdapter)
 
         imageButton.setOnClickListener(object : View.OnClickListener {
@@ -91,10 +94,11 @@ class day : Activity() {
         private var direct: String
         private var dateToAdd: String
         private var events: ArrayList<String> = ArrayList<String>()
-        constructor(context: Context, direct : String, dateToAdd: String) {
+        constructor(context: Context, evets: ArrayList<String>, direct : String, dateToAdd: String) {
             this.context = context;
             this.direct = direct;
             this.dateToAdd = dateToAdd
+            this.events = events
         }
 
         override fun getCount(): Int {
@@ -102,7 +106,7 @@ class day : Activity() {
         }
 
         override fun getItem(position: Int): Any {
-            return position
+            return events.get(position)
         }
 
         override fun getItemId(position: Int): Long {
@@ -112,7 +116,7 @@ class day : Activity() {
         override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
             var retView = convertView
             val holder: ViewHolder = ViewHolder()
-            events = DateStorage.todayEvent(dateToAdd, direct)
+           // events = DateStorage.todayEvent(dateToAdd, direct)
             if (convertView == null) {
                 val mInflater: LayoutInflater
                 mInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -125,7 +129,7 @@ class day : Activity() {
             else
             {
                 convertView.setTag(holder);
-                retView = convertView
+                //retView = convertView
             }
             holder.caption?.setText(events.get(position));
             holder.caption?.setOnFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
@@ -137,12 +141,12 @@ class day : Activity() {
                 }
             })
 
-                holder.button?.setOnClickListener(object : View.OnClickListener {
-                    override fun onClick(v: View) {
-                        DateStorage.deleteEvent(dateToAdd, direct, position)
-                        notifyDataSetChanged()
-                    }
-                })
+            holder.button?.setOnClickListener(object : View.OnClickListener {
+                override fun onClick(v: View) {
+                    DateStorage.deleteEvent(dateToAdd, direct, position)
+                    notifyDataSetChanged()
+                }
+            })
 
                 return retView
         }
