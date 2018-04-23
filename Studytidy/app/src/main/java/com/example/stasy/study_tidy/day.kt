@@ -112,13 +112,13 @@ class day : Activity() {
         override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
             var retView = convertView
             val holder: ViewHolder = ViewHolder()
-            var deleteButton = convertView!!.findViewById(R.id.imageButton2) as ImageButton
             events = DateStorage.todayEvent(dateToAdd, direct)
             if (convertView == null) {
                 val mInflater: LayoutInflater
                 mInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                 retView = mInflater.inflate(R.layout.item, null)
 
+                holder.button = convertView.findViewById(R.id.imageButton2) as ImageButton
                 holder.caption = convertView.findViewById(R.id.ItemCaption) as EditText
                 retView.setTag(holder);
                 }
@@ -137,7 +137,7 @@ class day : Activity() {
                 }
             })
 
-                deleteButton.setOnClickListener(object : View.OnClickListener {
+                holder.button?.setOnClickListener(object : View.OnClickListener {
                     override fun onClick(v: View) {
                         DateStorage.deleteEvent(dateToAdd, direct, position)
                         notifyDataSetChanged()
@@ -150,6 +150,7 @@ class day : Activity() {
 
     internal inner class ViewHolder {
         var caption: EditText? = null
+        var button: ImageButton? = null
     }
         override fun onTouchEvent(event: MotionEvent): Boolean {
             this.gestureDetectorCompat!!.onTouchEvent(event)

@@ -7,16 +7,17 @@ import java.util.HashMap
 
 class DateStorage {
 
+
+
     companion object {
         //дата, направление дела, список дел
         val educationEvent = "Учебная"
         val funEvent = "Внеучебная"
         var dataStorage = HashMap<String, HashMap<String, ArrayList<String>>>()
-
+        private var events = ArrayList<String>()
+        private var hashMap = HashMap<String, ArrayList<String>>()
 
     fun addEvent(data: String, course: String, event: String) {
-        var events = ArrayList<String>()
-        var hashMap = HashMap<String, ArrayList<String>>()
         if (!dataStorage.containsKey(data)) {
             events = ArrayList()
         }
