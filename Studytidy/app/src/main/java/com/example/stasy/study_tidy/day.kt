@@ -50,13 +50,19 @@ class day : Activity() {
         var _month:Int = _getMonth(date.split(" ")[1]) + 1
         var dateToAdd = _date + " " + _month.toString()
 
-        if(DateStorage.dataStorage.isEmpty() || !DateStorage.dataStorage.containsKey(dateToAdd) || !DateStorage.dataStorage.get(dateToAdd)?.containsKey(DateStorage.educationEvent)!! ||
-                !DateStorage.dataStorage.get(dateToAdd)?.containsKey(DateStorage.funEvent)!! ) {
-            if(!DateStorage.dataStorage.get(dateToAdd)?.containsKey(DateStorage.educationEvent)!!)
-                DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "")
-            if(!DateStorage.dataStorage.get(dateToAdd)?.containsKey(DateStorage.funEvent)!!)
-                DateStorage.addEvent(dateToAdd, DateStorage.funEvent, "")
+        if(DateStorage.dataStorage.isEmpty())
+        {
+            DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "")
+            DateStorage.addEvent(dateToAdd, DateStorage.funEvent, "")
         }
+        if(!DateStorage.dataStorage.containsKey(dateToAdd) || !DateStorage.dataStorage.get(dateToAdd)?.containsKey(DateStorage.educationEvent)!!) {
+            DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "")
+        }
+        if(!DateStorage.dataStorage.containsKey(dateToAdd) ||!DateStorage.dataStorage.get(dateToAdd)?.containsKey(DateStorage.funEvent)!!)
+        {
+            DateStorage.addEvent(dateToAdd, DateStorage.funEvent, "")
+        }
+
         studyListView.setItemsCanFocus(true)
         extracullicularListView.setItemsCanFocus(true)
 
