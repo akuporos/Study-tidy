@@ -50,9 +50,10 @@ class day : Activity() {
         var _month:Int = _getMonth(date.split(" ")[1]) + 1
         var dateToAdd = _date + " " + _month.toString()
 
-        DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "")
-        DateStorage.addEvent(dateToAdd, DateStorage.funEvent, "")
-
+        if(DateStorage.dataStorage.isEmpty()) {
+            DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "")
+            DateStorage.addEvent(dateToAdd, DateStorage.funEvent, "")
+        }
         studyListView.setItemsCanFocus(true)
         extracullicularListView.setItemsCanFocus(true)
 
@@ -85,7 +86,7 @@ class day : Activity() {
     override fun onDestroy() {
         super.onDestroy()
         var gson = Gson()
-        val json = gson.toJson(DateStorage)
+        val json = gson.toJson(DateStorage.dataStorage)
         try {
             val outputStreamWriter = OutputStreamWriter(applicationContext.openFileOutput(DateStorage.filename, Context.MODE_PRIVATE))
             outputStreamWriter.write(json)

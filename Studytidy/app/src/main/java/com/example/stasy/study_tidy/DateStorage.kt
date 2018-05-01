@@ -1,6 +1,7 @@
 package com.example.stasy.study_tidy
 
 import android.util.Pair
+import com.google.gson.internal.LinkedTreeMap
 import java.io.FileWriter
 import java.io.Writer
 
@@ -13,7 +14,7 @@ class DateStorage {
         //дата, направление дела, список дел
         val educationEvent = "Учебная"
         val funEvent = "Внеучебная"
-        var dataStorage = HashMap<String, HashMap<String, ArrayList<String>>>()
+        var dataStorage = HashMap<String, LinkedTreeMap<String, ArrayList<String>>>()
         val filename = "myfile.json"
 
     fun deleteEvent(date: String, key: String, position: Int) {
@@ -34,7 +35,7 @@ class DateStorage {
     }
     fun addEvent(s: String, s1: String, toString: String) {
         if (!dataStorage.containsKey(s))
-            dataStorage[s] = HashMap()
+            dataStorage[s] = LinkedTreeMap()
         if (!dataStorage[s]!!.containsKey(s1))
             dataStorage[s]!![s1] = ArrayList()
         dataStorage[s]!![s1]!!.add(toString)

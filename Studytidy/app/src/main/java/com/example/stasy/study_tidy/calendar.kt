@@ -52,7 +52,7 @@ class calendar : Activity(), YearViewClickListeners {
     override fun onDestroy() {
         super.onDestroy()
         var gson = Gson()
-        val json = gson.toJson(DateStorage)
+        val json = gson.toJson(DateStorage.dataStorage)
         try {
             val outputStreamWriter = OutputStreamWriter(applicationContext.openFileOutput(DateStorage.filename, Context.MODE_PRIVATE))
             outputStreamWriter.write(json)

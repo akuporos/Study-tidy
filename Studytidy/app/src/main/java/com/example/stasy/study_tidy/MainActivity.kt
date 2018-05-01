@@ -20,6 +20,8 @@ import android.content.Context.MODE_PRIVATE
 import android.preference.PreferenceDataStore
 import android.util.Log
 import java.io.*
+import java.util.ArrayList
+import java.util.HashMap
 
 class MainActivity : Activity() {
 
@@ -33,8 +35,10 @@ class MainActivity : Activity() {
 
 
         if(DateStorage.dataStorage.isEmpty() && content != "") {
-            gson.fromJson(content, DateStorage::class.java)
+            var t = gson.fromJson(content, DateStorage.dataStorage::class.java)
+            DateStorage.dataStorage = t
         }
+
 
         var image_button = findViewById(imageButton) as ImageButton
         image_button.setOnClickListener(object : View.OnClickListener {
@@ -48,7 +52,7 @@ class MainActivity : Activity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        val json = gson.toJson(DateStorage)
+        val json = gson.toJson(DateStorage.dataStorage)
         try {
             val outputStreamWriter = OutputStreamWriter(applicationContext.openFileOutput(DateStorage.filename, Context.MODE_PRIVATE))
             outputStreamWriter.write(json)
@@ -63,22 +67,8 @@ class MainActivity : Activity() {
         try {
             val inputStream = context.openFileInput(DateStorage.filename)
             if (inputStream != null) {
-                val inputStreamReader = InputStreamReader(inputStream)
-                val bufferedReader = BufferedReader(inputStreamReader)
-                var receiveString = ""
-                val stringBuilder = StringBuilder()
-                //receiveString = bufferedReader.readLine().toString()
                 ret = inputStream.bufferedReader().use(BufferedReader::readText)
-
-              //  while ((sCurrentLine = bufferedReader.readLine()) != null) println(sCurrentLine)
-          /*      while (receiveString != null) {
-                    stringBuilder.append(receiveString)
-                    receiveString = bufferedReader.readLine()
-                }
-
-                inputStream.close()
-                ret = stringBuilder.toString()
-            */}
+            }
         } catch (e: FileNotFoundException) {
             Log.e("login activity", "File not found: " + e.toString())
         } catch (e: IOException) {
