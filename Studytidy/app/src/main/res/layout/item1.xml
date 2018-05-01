@@ -3,10 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+
     <TextView
         android:id="@+id/ItemCaption"
         android:layout_width="324dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dip"
-        android:singleLine="true"></TextView>
+        android:singleLine="true"
+        android:layout_marginStart="2dip" />
 </LinearLayout>

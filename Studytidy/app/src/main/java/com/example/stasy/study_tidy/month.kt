@@ -2,6 +2,7 @@ package com.example.stasy.study_tidy
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -13,9 +14,13 @@ import android.widget.CalendarView
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import android.support.annotation.NonNull
+import android.util.Log
+import com.google.gson.Gson
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import com.prolificinteractive.materialcalendarview.OnRangeSelectedListener
 import kotlinx.android.synthetic.main.activity_month.*
+import java.io.IOException
+import java.io.OutputStreamWriter
 
 
 class month : Activity() {
@@ -49,7 +54,7 @@ class month : Activity() {
                 override fun onClick(v: View) {
                     for(day in dates )
                     {
-                        var dateToAdd = day.date.toString() + " " + day.month.toString()
+                        var dateToAdd = day.day.toString() + " " + day.month.toString()
                         DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "Session")
                     }
                 }
@@ -57,7 +62,18 @@ class month : Activity() {
         })
         gestureDetectorCompat = GestureDetectorCompat(this, MyGestureListener())
     }
-
+    override fun onDestroy() {
+        super.onDestroy()
+        var gson = Gson()
+        val json = gson.toJson(DateStorage)
+        try {
+            val outputStreamWriter = OutputStreamWriter(applicationContext.openFileOutput(DateStorage.filename, Context.MODE_PRIVATE))
+            outputStreamWriter.write(json)
+            outputStreamWriter.close()
+        } catch (e: IOException) {
+            Log.e("Exception", "File write failed: " + e.toString())
+        }
+    }
     override fun onTouchEvent(event: MotionEvent): Boolean {
         this.gestureDetectorCompat!!.onTouchEvent(event)
         return super.onTouchEvent(event)
@@ -73,8 +89,4 @@ class month : Activity() {
             return true
         }
     }
-}
-
-private fun MaterialCalendarView.setOnLongClickListener(mcv: MaterialCalendarView) {
-
 }

@@ -1,6 +1,7 @@
 package com.example.stasy.study_tidy
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -9,9 +10,13 @@ import android.widget.Toast
 import android.view.MotionEvent
 import android.view.GestureDetector
 import android.text.method.Touch.onTouchEvent
+import android.util.Log
 import android.widget.Toolbar
 import com.github.ik024.calendar_lib.custom.YearView
 import com.github.ik024.calendar_lib.listeners.YearViewClickListeners
+import com.google.gson.Gson
+import java.io.IOException
+import java.io.OutputStreamWriter
 import java.util.*
 
 
@@ -44,7 +49,18 @@ class calendar : Activity(), YearViewClickListeners {
         mYearView.setEventList(eventList)
 
     }
-
+    override fun onDestroy() {
+        super.onDestroy()
+        var gson = Gson()
+        val json = gson.toJson(DateStorage)
+        try {
+            val outputStreamWriter = OutputStreamWriter(applicationContext.openFileOutput(DateStorage.filename, Context.MODE_PRIVATE))
+            outputStreamWriter.write(json)
+            outputStreamWriter.close()
+        } catch (e: IOException) {
+            Log.e("Exception", "File write failed: " + e.toString())
+        }
+    }
     override fun onTouchEvent(event: MotionEvent): Boolean {
         this.gestureDetectorCompat!!.onTouchEvent(event)
         return super.onTouchEvent(event)

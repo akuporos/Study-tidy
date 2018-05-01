@@ -5,14 +5,17 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ListView
-import java.util.ArrayList
+import android.widget.*
+import com.google.gson.Gson
+import java.io.IOException
+import java.io.OutputStreamWriter
+import java.util.*
+import java.text.SimpleDateFormat
+
 
 class today : Activity() {
 
@@ -28,46 +31,64 @@ class today : Activity() {
         val studyListView = findViewById<ListView>(R.id.listView)
         val extracullicularListView = findViewById<ListView>(R.id.listView1)
 
-       // val studyAdapter = MyAdapter()
-       // studyListView.setAdapter(studyAdapter);
-       // val extracullicularAdapter = MyAdapter( )
-       // extracullicularListView.setAdapter(extracullicularAdapter)
+        val calendar = Calendar.getInstance()
+        val mdformat = SimpleDateFormat("yyyy/MM/dd ")
+        var month = mdformat.format(calendar.time).split("/")[1]
+        month = (month.toInt() - 1).toString()
+
+        var day = mdformat.format(calendar.time).split("/")[2]
+        month = (month.toInt()).toString()
+
+        val today_date = day + " " + month
+        val studyAdapter = MyAdapter(applicationContext, DateStorage.todayEvent(today_date, DateStorage.educationEvent))
+        studyListView.setAdapter(studyAdapter);
+        val extracullicularAdapter = MyAdapter(applicationContext, DateStorage.todayEvent(today_date, DateStorage.funEvent) )
+        extracullicularListView.setAdapter(extracullicularAdapter)
+
     }
-
-    inner class MyAdapter : BaseAdapter {
-        private var context: Context
-        private var events: ArrayList<String>//studyStorage.todayEvent("8", "Учебная")
-
-        constructor(context: Context, events: ArrayList<String>) {
-            this.context = context;
-            this.events = events;
+    override fun onDestroy() {
+        super.onDestroy()
+        var gson = Gson()
+        val json = gson.toJson(DateStorage)
+        try {
+            val outputStreamWriter = OutputStreamWriter(applicationContext.openFileOutput(DateStorage.filename, Context.MODE_PRIVATE))
+            outputStreamWriter.write(json)
+            outputStreamWriter.close()
+        } catch (e: IOException) {
+            Log.e("Exception", "File write failed: " + e.toString())
         }
+    }
+    inner class MyAdapter(private var context: Context,//studyStorage.todayEvent("8", "Учебная")
+                          private var events: ArrayList<String>) : BaseAdapter() {
 
         override fun getCount(): Int {
             return events.size
         }
 
         override fun getItem(position: Int): Any {
-            return position
+            return events.get(position)
         }
 
         override fun getItemId(position: Int): Long {
             return position.toLong()
         }
 
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            var convertView = convertView
-
-            if (convertView == null) {
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
+            var retView = convertView
+            var caption: TextView? = null
+            if(retView != null) {
                 val mInflater: LayoutInflater
                 mInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                convertView = mInflater.inflate(R.layout.item1, null)
+                retView = mInflater.inflate(R.layout.item1, null)
 
-                var textView = convertView!!.findViewById(R.id.ItemCaption) as EditText
-
-
+                caption = retView.findViewById(R.id.ItemCaption) as TextView?
             }
-            return convertView
+            else
+            {
+                retView = convertView
+            }
+            caption?.setText(events.get(position));
+            return retView
         }
     }
 }

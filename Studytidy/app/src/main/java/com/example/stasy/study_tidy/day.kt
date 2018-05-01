@@ -1,5 +1,6 @@
 package com.example.stasy.study_tidy
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -21,10 +22,14 @@ import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import java.nio.file.Files.size
 import android.content.Context.LAYOUT_INFLATER_SERVICE
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.BaseAdapter
+import com.google.gson.Gson
 import com.prolificinteractive.materialcalendarview.CalendarUtils.getMonth
 import kotlinx.android.synthetic.main.activity_day.*
+import java.io.IOException
+import java.io.OutputStreamWriter
 import java.util.ArrayList
 
 
@@ -42,22 +47,22 @@ class day : Activity() {
         textView2.setText(date)
 
         var _date = date.split(" ")[0]
-        var _month:Int = _getMonth(date.split(" ")[1])
+        var _month:Int = _getMonth(date.split(" ")[1]) + 1
         var dateToAdd = _date + " " + _month.toString()
 
-        val studyListView = findViewById<ListView>(R.id.listView)
-        val extracullicularListView = findViewById<ListView>(R.id.listView1)
+        DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "")
+        DateStorage.addEvent(dateToAdd, DateStorage.funEvent, "")
 
         studyListView.setItemsCanFocus(true)
         extracullicularListView.setItemsCanFocus(true)
 
-        DateStorage.addEvent(dateToAdd, DateStorage.funEvent, "")
-        DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "")
         val studyAdapter = MyAdapter(applicationContext,  DateStorage.todayEvent(dateToAdd, DateStorage.educationEvent), DateStorage.educationEvent, dateToAdd)
         studyListView.setAdapter(studyAdapter);
 
+
         imageButton1.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
+                currentFocus?.clearFocus()
                 DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "")
                 studyAdapter.notifyDataSetChanged()
             }
@@ -68,10 +73,26 @@ class day : Activity() {
 
         imageButton.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
+                currentFocus?.clearFocus()
                 DateStorage.addEvent(dateToAdd, DateStorage.funEvent, "")
                 extracullicularAdapter.notifyDataSetChanged()
             }
         })
+        studyAdapter.notifyDataSetChanged()
+        extracullicularAdapter.notifyDataSetChanged()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        var gson = Gson()
+        val json = gson.toJson(DateStorage)
+        try {
+            val outputStreamWriter = OutputStreamWriter(applicationContext.openFileOutput(DateStorage.filename, Context.MODE_PRIVATE))
+            outputStreamWriter.write(json)
+            outputStreamWriter.close()
+        } catch (e: IOException) {
+            Log.e("Exception", "File write failed: " + e.toString())
+        }
     }
 
     private fun _getMonth(s: String): Int {
@@ -89,17 +110,8 @@ class day : Activity() {
         return 0
     }
 
-    inner class MyAdapter : BaseAdapter {
-        private var context: Context
-        private var direct: String
-        private var dateToAdd: String
-        private var events: ArrayList<String> = ArrayList<String>()
-        constructor(context: Context, evets: ArrayList<String>, direct : String, dateToAdd: String) {
-            this.context = context;
-            this.direct = direct;
-            this.dateToAdd = dateToAdd
-            this.events = events
-        }
+    inner class MyAdapter(private var context: Context, evets: ArrayList<String>, private var direct: String, private var dateToAdd: String) : BaseAdapter() {
+        private var events: ArrayList<String> = evets
 
         override fun getCount(): Int {
             return events.size
@@ -113,36 +125,39 @@ class day : Activity() {
             return position.toLong()
         }
 
-        override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+        @SuppressLint("ViewHolder", "InflateParams")
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
             var retView = convertView
-            val holder: ViewHolder = ViewHolder()
+            lateinit var holder: ViewHolder
            // events = DateStorage.todayEvent(dateToAdd, direct)
-            if (convertView == null) {
+            if (retView == null) {
+                holder = ViewHolder()
                 val mInflater: LayoutInflater
                 mInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
                 retView = mInflater.inflate(R.layout.item, null)
 
-                holder.button = convertView.findViewById(R.id.imageButton2) as ImageButton
-                holder.caption = convertView.findViewById(R.id.ItemCaption) as EditText
+                holder.button = retView.findViewById(R.id.imageButton2) as ImageButton?
+                holder.caption = retView.findViewById(R.id.ItemCaption) as EditText?
                 retView.setTag(holder);
                 }
             else
             {
-                convertView.setTag(holder);
-                //retView = convertView
+                holder = convertView!!.getTag() as ViewHolder;
+                retView = convertView
             }
+
             holder.caption?.setText(events.get(position));
-            holder.caption?.setOnFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
+            holder.caption?.onFocusChangeListener = OnFocusChangeListener { v, hasFocus ->
                 if (!hasFocus) {
-                    val position = v.id
                     val Caption = v as EditText
-                    DateStorage.changeEvent(dateToAdd, direct, Caption.text.toString(), position)
+                    DateStorage.setEvent(dateToAdd, direct, Caption.text.toString(), position)
                     notifyDataSetChanged()
                 }
-            })
+            }
 
             holder.button?.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(v: View) {
+                    holder.caption?.clearFocus()
                     DateStorage.deleteEvent(dateToAdd, direct, position)
                     notifyDataSetChanged()
                 }

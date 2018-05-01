@@ -1,34 +1,24 @@
 package com.example.stasy.study_tidy
 
 import android.util.Pair
+import java.io.FileWriter
+import java.io.Writer
 
 import java.util.ArrayList
 import java.util.HashMap
 
 class DateStorage {
 
-
-
     companion object {
         //дата, направление дела, список дел
         val educationEvent = "Учебная"
         val funEvent = "Внеучебная"
         var dataStorage = HashMap<String, HashMap<String, ArrayList<String>>>()
-        private var events = ArrayList<String>()
-        private var hashMap = HashMap<String, ArrayList<String>>()
-
-    fun addEvent(data: String, course: String, event: String) {
-        if (!dataStorage.containsKey(data)) {
-            events = ArrayList()
-        }
-        events.add(event)
-        hashMap.set(course, events)
-        dataStorage.set(data, hashMap)
-
-    }
+        val filename = "myfile.json"
 
     fun deleteEvent(date: String, key: String, position: Int) {
-        dataStorage.get(date)?.get(key)?.removeAt(position)
+        if(position < dataStorage.get(date)?.get(key)?.size!!)
+            dataStorage.get(date)?.get(key)?.removeAt(position)
     }
 
     fun todayEvent(date: String, key: String): ArrayList<String> {
@@ -42,9 +32,21 @@ class DateStorage {
         return todayEvents
 
     }
+    fun addEvent(s: String, s1: String, toString: String) {
+        if (!dataStorage.containsKey(s))
+            dataStorage[s] = HashMap()
+        if (!dataStorage[s]!!.containsKey(s1))
+            dataStorage[s]!![s1] = ArrayList()
+        dataStorage[s]!![s1]!!.add(toString)
+    }
 
-    fun changeEvent(s: String, s1: String, toString: String, position: Int) {
-        dataStorage.get(s)?.get(s1)?.add(position, toString)
+    fun setEvent(s: String, s1: String, toString: String, position: Int) {
+
+        if (dataStorage.isEmpty())
+            dataStorage.get(s)?.get(s1)?.add("")
+        if(position < dataStorage.get(s)?.get(s1)?.size!!)
+            dataStorage.get(s)?.get(s1)?.set(position, toString)
+
     }
     }
 }

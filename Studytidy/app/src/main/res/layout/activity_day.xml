@@ -16,7 +16,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_control_point_black_24dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listView" />
+        app:layout_constraintTop_toBottomOf="@+id/studyListView" />
 
     <TextView
         android:id="@+id/textView3"
@@ -32,7 +32,7 @@
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listView" />
+        app:layout_constraintTop_toBottomOf="@+id/studyListView" />
 
     <ImageButton
         android:id="@+id/imageButton1"
@@ -59,7 +59,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/studyListView"
         android:layout_width="386dp"
         android:layout_height="143dp"
         android:layout_marginTop="24dp"
@@ -69,7 +69,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <ListView
-        android:id="@+id/listView1"
+        android:id="@+id/extracullicularListView"
         android:layout_width="380dp"
         android:layout_height="250dp"
         android:gravity="center_horizontal"
