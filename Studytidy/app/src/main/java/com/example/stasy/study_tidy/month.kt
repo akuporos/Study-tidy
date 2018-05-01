@@ -54,7 +54,7 @@ class month : Activity() {
                 override fun onClick(v: View) {
                     for(day in dates )
                     {
-                        var dateToAdd = day.day.toString() + " " + day.month.toString()
+                        var dateToAdd = day.day.toString() + " " + (day.month + 1).toString()
                         DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "Session")
                     }
                 }

@@ -1,5 +1,6 @@
 package com.example.stasy.study_tidy
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -15,10 +16,14 @@ import java.io.IOException
 import java.io.OutputStreamWriter
 import java.util.*
 import java.text.SimpleDateFormat
+import android.widget.ArrayAdapter
+
+
 
 
 class today : Activity() {
 
+    @SuppressLint("ResourceType")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_today)
@@ -32,17 +37,20 @@ class today : Activity() {
         val extracullicularListView = findViewById<ListView>(R.id.listView1)
 
         val calendar = Calendar.getInstance()
-        val mdformat = SimpleDateFormat("yyyy/MM/dd ")
+        val mdformat = SimpleDateFormat("yyyy/MM/dd")
         var month = mdformat.format(calendar.time).split("/")[1]
-        month = (month.toInt() - 1).toString()
-
-        var day = mdformat.format(calendar.time).split("/")[2]
         month = (month.toInt()).toString()
 
+        var day = mdformat.format(calendar.time).split("/")[2]
+        day = (day.toInt()).toString()
+
         val today_date = day + " " + month
-        val studyAdapter = MyAdapter(applicationContext, DateStorage.todayEvent(today_date, DateStorage.educationEvent))
+        val studyAdapter = ArrayAdapter<String>(this,
+                R.layout.item1, R.id.todayItem, DateStorage.todayEvent(today_date, DateStorage.educationEvent))
         studyListView.setAdapter(studyAdapter);
-        val extracullicularAdapter = MyAdapter(applicationContext, DateStorage.todayEvent(today_date, DateStorage.funEvent) )
+
+        val extracullicularAdapter = ArrayAdapter<String>(this,
+                R.layout.item1, R.id.todayItem, DateStorage.todayEvent(today_date, DateStorage.funEvent))
         extracullicularListView.setAdapter(extracullicularAdapter)
 
     }
@@ -56,39 +64,6 @@ class today : Activity() {
             outputStreamWriter.close()
         } catch (e: IOException) {
             Log.e("Exception", "File write failed: " + e.toString())
-        }
-    }
-    inner class MyAdapter(private var context: Context,//studyStorage.todayEvent("8", "Учебная")
-                          private var events: ArrayList<String>) : BaseAdapter() {
-
-        override fun getCount(): Int {
-            return events.size
-        }
-
-        override fun getItem(position: Int): Any {
-            return events.get(position)
-        }
-
-        override fun getItemId(position: Int): Long {
-            return position.toLong()
-        }
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
-            var retView = convertView
-            var caption: TextView? = null
-            if(retView != null) {
-                val mInflater: LayoutInflater
-                mInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-                retView = mInflater.inflate(R.layout.item1, null)
-
-                caption = retView.findViewById(R.id.ItemCaption) as TextView?
-            }
-            else
-            {
-                retView = convertView
-            }
-            caption?.setText(events.get(position));
-            return retView
         }
     }
 }

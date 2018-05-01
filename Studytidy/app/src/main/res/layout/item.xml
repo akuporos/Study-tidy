@@ -9,7 +9,8 @@
         android:layout_width="324dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dip"
-        android:singleLine="true"></EditText>
+        android:singleLine="true"
+        android:layout_marginStart="2dip" />
 
     <ImageButton
         android:id="@+id/imageButton2"

@@ -45,9 +45,9 @@ class DateStorage {
 
         if (dataStorage.isEmpty())
             dataStorage.get(s)?.get(s1)?.add("")
+        
         if(position < dataStorage.get(s)?.get(s1)?.size!!)
             dataStorage.get(s)?.get(s1)?.set(position, toString)
-
     }
     }
 }
