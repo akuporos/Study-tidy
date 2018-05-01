@@ -42,10 +42,6 @@ class DateStorage {
     }
 
     fun setEvent(s: String, s1: String, toString: String, position: Int) {
-
-        if (dataStorage.isEmpty())
-            dataStorage.get(s)?.get(s1)?.add("")
-        addEvent(s, s1, "")
         if(position < dataStorage.get(s)?.get(s1)?.size!!)
             dataStorage.get(s)?.get(s1)?.set(position, toString)
     }
