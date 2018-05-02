@@ -38,13 +38,17 @@ class today : Activity() {
 
         val calendar = Calendar.getInstance()
         val mdformat = SimpleDateFormat("yyyy/MM/dd")
+
+        var year = mdformat.format(calendar.time).split("/")[0]
+        year = (year.toInt()).toString()
+
         var month = mdformat.format(calendar.time).split("/")[1]
         month = (month.toInt()).toString()
 
         var day = mdformat.format(calendar.time).split("/")[2]
         day = (day.toInt()).toString()
 
-        val today_date = day + " " + month
+        val today_date = day + " " + month + " " + year
         val studyAdapter = ArrayAdapter<String>(this,
                 R.layout.item1, R.id.todayItem, DateStorage.todayEvent(today_date, DateStorage.educationEvent))
         studyListView.setAdapter(studyAdapter);

@@ -35,20 +35,33 @@ import java.util.ArrayList
 
 class day : Activity() {
     private var gestureDetectorCompat: GestureDetectorCompat? = null
-
+    val monthList : List<String> = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
+            "августа", "сентября", "октября", "ноября", "декабря")
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_day)
         gestureDetectorCompat = GestureDetectorCompat(this, MyGestureListener())
 
         val extras = intent.extras
-        val date = extras.getString("Date")
+        var dateToAdd = ""
 
-        textView2.setText(date)
-
-        var _date = date.split(" ")[0]
-        var _month:Int = _getMonth(date.split(" ")[1]) + 1
-        var dateToAdd = _date + " " + _month.toString()
+        if(extras.containsKey("Date")) {
+            val date = extras.getString("Date")
+            textView2.setText(date)
+            var _date = date.split(" ")[0]
+            var _month:Int = _getMonth(date.split(" ")[1]) + 1
+            var year = date.split(" ")[2]
+            dateToAdd = _date + " " + _month.toString() + " " + year.toString()
+        }
+        else
+        {
+            val day = extras.getString("day")
+            val month = extras.getString("day_month")
+            val year = extras.getString("day_year")
+            textView2.setText(day + " " + monthList[month.toInt()] + " " + year)
+            dateToAdd = day + " " + (month.toInt()+1).toString() + " " + year
+        }
 
         if(DateStorage.dataStorage.isEmpty())
         {
@@ -106,8 +119,6 @@ class day : Activity() {
     }
 
     private fun _getMonth(s: String): Int {
-        val monthList : List<String> = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
-                "августа", "сентября", "октября", "ноября", "декабря")
         var t:Int = 0
         for(month in monthList)
         {

@@ -11,7 +11,10 @@ import android.view.MotionEvent
 import android.view.GestureDetector
 import android.text.method.Touch.onTouchEvent
 import android.util.Log
+import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toolbar
+import com.github.ik024.calendar_lib.custom.MonthView
 import com.github.ik024.calendar_lib.custom.YearView
 import com.github.ik024.calendar_lib.listeners.YearViewClickListeners
 import com.google.gson.Gson
@@ -48,6 +51,28 @@ class calendar : Activity(), YearViewClickListeners {
         //adding events to the calendar
         mYearView.setEventList(eventList)
 
+        findMonthViews(mYearView)
+    }
+
+    private fun findMonthViews(view : ViewGroup) {
+        val monthNameField = MonthView::class.java.getDeclaredField("mTvMonthName")
+        monthNameField.isAccessible = true
+        val selectedYear = MonthView::class.java.getDeclaredField("selectedYear")
+        selectedYear.isAccessible = true
+        val selectedMonth = MonthView::class.java.getDeclaredField("selectedMonth")
+        selectedMonth.isAccessible = true
+
+        for (i in 0 until view.childCount) {
+            val ch = view.getChildAt(i)
+            if (ch is ViewGroup)
+                findMonthViews(ch)
+            if (ch is MonthView) {
+                val monthName = monthNameField.get(ch) as TextView
+                monthName.setOnClickListener {
+                    dateClicked(selectedYear.getInt(ch), selectedMonth.getInt(ch), -1)
+                }
+            }
+        }
     }
     override fun onDestroy() {
         super.onDestroy()
@@ -89,11 +114,22 @@ class calendar : Activity(), YearViewClickListeners {
         return cal.getTime()
     }
 
-    override fun dateClicked(year: Int, _month: Int, day: Int) {
-        val monthActivity = Intent(applicationContext, month::class.java)
-        monthActivity.putExtra("year", year)
-        monthActivity.putExtra("month", _month)
-        startActivity(monthActivity)
+    override fun dateClicked(year: Int, _month: Int, _day: Int) {
+        if (_day == -1)
+        {
+            val monthActivity = Intent(applicationContext, month::class.java)
+            monthActivity.putExtra("year", year.toString())
+            monthActivity.putExtra("month", _month.toString())
+            startActivity(monthActivity)
+        }
+        else
+        {
+            val dayActivity = Intent(applicationContext, day::class.java)
+            dayActivity.putExtra("day_year", year.toString())
+            dayActivity.putExtra("day_month", _month.toString())
+            dayActivity.putExtra("day", _day.toString())
+            startActivity(dayActivity)
+        }
     }
 }
 
