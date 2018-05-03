@@ -1,4 +1,4 @@
-package com.example.stasy.study_tidy
+package com.hseanastasia.stasy.study_tidy
 
 import android.app.Activity
 import android.content.Context
@@ -82,21 +82,21 @@ class month : Activity() {
         mcv.setSelectionMode(MaterialCalendarView.SELECTION_MODE_RANGE)
 
         mcv.setOnDateChangedListener(OnDateSelectedListener { widget, date, selected ->
-            mcv.setOnLongClickListener(object : View.OnLongClickListener {
-                override fun onLongClick(v: View): Boolean {
-                    return true
-                }
-            })
             var dateToSend= date.day.toString() + " " + monthList[date.month] + " " + date.year
-            dayActivity.putExtra("Date", dateToSend)
-            startActivity(dayActivity)
+            button1.setOnClickListener (object : View.OnClickListener {
+                override fun onClick(v: View) {
+                    dayActivity.putExtra("Date", dateToSend)
+                    startActivity(dayActivity)
+                 }
+            })
         })
+
         mcv.setOnRangeSelectedListener(OnRangeSelectedListener{widget, dates ->
             button.setOnClickListener (object : View.OnClickListener {
                 override fun onClick(v: View) {
                     for(day in dates )
                     {
-                        var dateToAdd = day.day.toString() + " " + (day.month + 1).toString()
+                        var dateToAdd = day.day.toString() + " " + (day.month + 1).toString() + " " + day.year.toString()
                         DateStorage.addEvent(dateToAdd, DateStorage.educationEvent, "Session")
                     }
                 }

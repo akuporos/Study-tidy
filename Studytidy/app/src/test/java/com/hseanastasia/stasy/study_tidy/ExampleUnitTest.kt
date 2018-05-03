@@ -1,4 +1,4 @@
-package com.example.stasy.study_tidy
+package com.hseanastasia.stasy.study_tidy
 
 import org.junit.Test
 

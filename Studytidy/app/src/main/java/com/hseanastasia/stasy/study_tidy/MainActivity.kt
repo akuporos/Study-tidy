@@ -1,4 +1,4 @@
-package com.example.stasy.study_tidy
+package com.hseanastasia.stasy.study_tidy
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -6,13 +6,13 @@ import android.view.View
 import android.widget.ImageButton
 import android.content.Intent
 import android.app.Activity
-import com.example.stasy.study_tidy.R.id.imageButton
+import com.hseanastasia.stasy.study_tidy.R.id.imageButton
 import android.support.v4.view.GestureDetectorCompat
 import android.view.MotionEvent
 import android.widget.Toast
 import android.view.GestureDetector
 import android.text.method.Touch.onTouchEvent
-import com.example.stasy.study_tidy.R.layout.activity_calendar
+import com.hseanastasia.stasy.study_tidy.R.layout.activity_calendar
 import com.google.gson.Gson
 import android.R.attr.data
 import android.content.Context

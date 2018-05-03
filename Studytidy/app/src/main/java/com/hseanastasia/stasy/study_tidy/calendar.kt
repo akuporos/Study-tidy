@@ -1,4 +1,4 @@
-package com.example.stasy.study_tidy
+package com.hseanastasia.stasy.study_tidy
 
 import android.app.Activity
 import android.content.Context
@@ -49,7 +49,7 @@ class calendar : Activity(), YearViewClickListeners {
         mYearView = findViewById(R.id.calendar_year_view) as YearView
         mYearView.registerYearViewClickListener(this)
         //adding events to the calendar
-        mYearView.setEventList(eventList)
+        //mYearView.setEventList(eventList)
 
         findMonthViews(mYearView)
     }

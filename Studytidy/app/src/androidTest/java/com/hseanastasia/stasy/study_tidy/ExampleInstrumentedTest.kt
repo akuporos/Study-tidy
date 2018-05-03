@@ -1,4 +1,4 @@
-package com.example.stasy.study_tidy
+package com.hseanastasia.stasy.study_tidy
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

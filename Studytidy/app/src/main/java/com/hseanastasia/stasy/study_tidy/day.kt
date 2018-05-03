@@ -1,4 +1,4 @@
-package com.example.stasy.study_tidy
+package com.hseanastasia.stasy.study_tidy
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -172,7 +172,7 @@ class day : Activity() {
                 if (!hasFocus) {
                     val Caption = v as EditText
                     DateStorage.setEvent(dateToAdd, direct, Caption.text.toString(), position)
-                    notifyDataSetChanged()
+                    //notifyDataSetChanged()
                 }
             }
 

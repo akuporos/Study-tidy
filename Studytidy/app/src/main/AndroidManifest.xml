@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.stasy.study_tidy">
+    package="com.hseanastasia.stasy.study_tidy">
     <uses-permission android:name="android.permission.READ_CALENDAR"> </uses-permission>
     <uses-permission android:name="android.permission.WRITE_CALENDAR"> </uses-permission>
     <application
